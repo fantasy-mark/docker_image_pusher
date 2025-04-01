@@ -1,4 +1,2 @@
-#支持私库
-nvcr.io/nvidia/pytorch:20.12-py3
-#支持指定架构 linux/amd64 linux/arm64 windows/amd64
---platform=linux/amd64
+#支持指定架构 linux/amd64 linux/arm64 windows/amd64 支持私库
+nvcr.io/nvidia/pytorch:20.12-py3 --platform=linux/amd64
