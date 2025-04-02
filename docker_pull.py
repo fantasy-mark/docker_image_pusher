@@ -69,18 +69,44 @@ class DockerImagePuller:
         }
 
     def download_with_progress(self, url: str, file_path: str, description: str) -> None:
-        """Download a file with progress display."""
+        """Download a file with progress display.
+        
+        Args:
+            url: URL to download from
+            file_path: Local path to save the file
+            description: Description of what's being downloaded
+        """
         headers = self.get_auth_token('application/vnd.docker.distribution.manifest.v2+json')
         response = requests.get(url, headers=headers, stream=True, verify=False)
         response.raise_for_status()
 
         total_size = int(response.headers.get('content-length', 0))
-        print(f'{description} total {total_size} B')
+        downloaded_size = 0
+        chunk_size = 8192
+        progress_width = 50  # Width of the progress bar
+        
+        print(f'{description} ({total_size/1024/1024:.2f} MB)')
+        print('[' + ' ' * progress_width + '] 0%', end='\r')
 
         with open(file_path, 'wb') as f:
-            for chunk in response.iter_content(chunk_size=8192):
+            for chunk in response.iter_content(chunk_size=chunk_size):
                 if chunk:
                     f.write(chunk)
+                    downloaded_size += len(chunk)
+                    
+                    # Calculate progress
+                    percent = downloaded_size / total_size
+                    filled_width = int(progress_width * percent)
+                    
+                    # Create progress bar
+                    progress_bar = '[' + '=' * filled_width + '>' + ' ' * (progress_width - filled_width - 1) + ']'
+                    percent_text = f'{percent * 100:.1f}%'
+                    
+                    # Add download stats
+                    stats = f'{downloaded_size/1024/1024:.2f}/{total_size/1024/1024:.2f} MB'
+                    
+                    # Print progress
+                    print(f'{progress_bar} {percent_text} {stats}', end='\r')
 
     def fetch_manifest(self) -> Dict:
         """Fetch the image manifest."""
