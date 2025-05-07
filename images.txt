@@ -1,9 +1,9 @@
 #支持指定架构 linux/amd64 linux/arm64 windows/amd64 支持私库
-ghcr.io/pezzolabs/pezzo/server:latest
-clickhouse/clickhouse-server:23-alpine
-postgres:15-alpine3.17
-supertokens/supertokens-postgresql:5.0
-redis/redis-stack-server:7.2.0-v0
-nsmithuk/local-kms:latest
+langfuse/langfuse-worker:3
+langfuse/langfuse:3
+clickhouse/clickhouse-server
+minio/minio
+redis:7
+postgres:latest
 
 
